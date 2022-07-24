@@ -1,24 +1,32 @@
-import logo from './logo.svg';
+import React, { useContext } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Header from './components/Header/Header';
+import PageFooter from './components/Footer/Footer';
+import { Home } from './pages/Home'
+import { AdminPanel } from './pages/AdminPanel/';
+import Landing from './pages/Landing/Landing';
+import Login from './pages/Login/Login';
+import NotFound from './pages/NotFound/NotFound';
+import AuthContext from './context/auth/AuthContext';
 import './App.css';
+import ProtectedRoute from './routes/ProtectedRoute';
 
 function App() {
+  const { isAuthenticated } = useContext(AuthContext); 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      <Routes>
+        {isAuthenticated !== null && ( <Route path='/' element={<Landing />} /> ) }
+        {isAuthenticated !== null && ( <Route path='/login' element={<Login />} /> ) }
+        {isAuthenticated !== null && ( <Route path='/*' element={<NotFound />} /> ) }
+        <Route element={<ProtectedRoute />}>
+          <Route path='/home' element={<Home />}/>
+          <Route path='/admin/*' element={<AdminPanel />}/>
+        </Route>
+      </Routes>
+      <PageFooter />
+    </>
   );
 }
 
