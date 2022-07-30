@@ -1,11 +1,7 @@
 import React from 'react';
 import { Outlet, Route, Routes } from 'react-router-dom';
+import { Sidebar, Users, Orders, Products, Categories } from '../../components/Admin/index';
 
-import Sidebar from '../../components/Sidebar/Sidebar';
-import Categories from '../../components/Categories/Categories';
-import Orders from '../../components/Orders/Orders';
-import Products from '../../components/Products/Products';
-import Users from '../../components/Users/Users';
 
 const AdminPanel = () => {
   return (

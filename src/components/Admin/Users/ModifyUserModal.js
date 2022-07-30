@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Radio } from 'antd';
+import { Form, Input, Modal } from 'antd';
 import React from 'react';
 
 const ModifyUserModal = ({ visible, onCreate, onCancel }) => {
@@ -46,12 +46,6 @@ const ModifyUserModal = ({ visible, onCreate, onCancel }) => {
         </Form.Item>
         <Form.Item name="description" label="Description">
           <Input type="textarea" />
-        </Form.Item>
-        <Form.Item name="modifier" className="collection-create-form_last-form-item">
-          <Radio.Group>
-            <Radio value="public">Public</Radio>
-            <Radio value="private">Private</Radio>
-          </Radio.Group>
         </Form.Item>
       </Form>
     </Modal>

@@ -1,31 +1,25 @@
-import React, { useContext } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Header from './components/Header/Header';
-import PageFooter from './components/Footer/Footer';
-import { Home } from './pages/Home'
-import { AdminPanel } from './pages/AdminPanel/';
-import Landing from './pages/Landing/Landing';
-import Login from './pages/Login/Login';
-import NotFound from './pages/NotFound/NotFound';
-import AuthContext from './context/auth/AuthContext';
-import './App.css';
+import { Header, Footer } from './components/Layout';
+import { Landing, Home, AdminPanel, Login, Register, NotFound } from './pages';
 import ProtectedRoute from './routes/ProtectedRoute';
+import Cart from './pages/Cart/Cart';
 
 function App() {
-  const { isAuthenticated } = useContext(AuthContext); 
   return (
     <>
       <Header />
       <Routes>
-        {isAuthenticated !== null && ( <Route path='/' element={<Landing />} /> ) }
-        {isAuthenticated !== null && ( <Route path='/login' element={<Login />} /> ) }
-        {isAuthenticated !== null && ( <Route path='/*' element={<NotFound />} /> ) }
+        <Route index path='/' element={<Landing />} />
         <Route element={<ProtectedRoute />}>
           <Route path='/home' element={<Home />}/>
           <Route path='/admin/*' element={<AdminPanel />}/>
+          <Route path='/cart' element={<Cart />}/>
         </Route>
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/*' element={<NotFound />} />
       </Routes>
-      <PageFooter />
+      <Footer />
     </>
   );
 }
