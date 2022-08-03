@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import jwt_decode from "jwt-decode";
 import AuthContext from './AuthContext';
+import setAuthTokenAxios from '../../utils/setAuthToken';
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const navigate = useNavigate();
-  
+  let location = useLocation();
+
   const handleLogin = async ({ email, password }) => {
     const res = await axios.post('http://localhost:3400/api/auth/login', 
     { 
@@ -20,7 +22,8 @@ const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(user));
     setToken(res.data.token);
     setUser(user);
-    navigate('/home');
+    // setAuthTokenAxios(res.data.token);
+    navigate('/menu');
   };
 
   const handleLogout = () => {
@@ -48,14 +51,16 @@ const AuthProvider = ({ children }) => {
     setToken(localStorage.getItem('token'));
     setUser(JSON.parse(localStorage.getItem('user')));
   };
+  
+  useEffect(() => {
+    loadDataFromStorage();
+  }, []);
 
   const checkExpiredToken = () => {
     if(token !== null){
       let decodedToken = jwt_decode(token);
       let currentDate = new Date();
-      console.log('estoy intentando desloguear');
       if ((decodedToken.exp * 1000) < currentDate.getTime()) {
-        console.log('deberia deslogearme aca');
         handleLogout();  
       } 
     }
@@ -63,8 +68,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     checkExpiredToken();
-    loadDataFromStorage();
-  }, []);
+  }, [location]);
 
   const value = {
     user,

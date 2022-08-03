@@ -28,7 +28,6 @@ const CartItem = ({ product, addProduct, removeProduct }) => {
             </div>
             <p className='text-muted'>{product.description}</p>
           </div>
-
         </div>
       </li>
   );

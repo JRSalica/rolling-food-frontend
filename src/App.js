@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { Header, Footer } from './components/Layout';
-import { Landing, Home, AdminPanel, Login, Register, NotFound } from './pages';
+import { Home, Menu, AdminPanel, Login, Register, NotFound } from './pages';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Cart from './pages/Cart/Cart';
 
@@ -9,9 +9,9 @@ function App() {
     <>
       <Header />
       <Routes>
-        <Route index path='/' element={<Landing />} />
+        <Route index path='/' element={<Home />} />
         <Route element={<ProtectedRoute />}>
-          <Route path='/home' element={<Home />}/>
+          <Route path='/menu' element={<Menu />}/>
           <Route path='/admin/*' element={<AdminPanel />}/>
           <Route path='/cart' element={<Cart />}/>
         </Route>

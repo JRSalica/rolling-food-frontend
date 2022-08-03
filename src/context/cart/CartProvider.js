@@ -5,6 +5,10 @@ import CartContext from './CartContext';
 const CartProvider = ({ children }) => {
   const [order, setOrder] = useState(null);
   const { user } = useAuth();
+
+  // const loadOrderToStorage = (order) =>{
+  //   localStorage.setItem('order', JSON.stringify(order));
+  // }
   
   const createOrder = () => {
     setOrder({
@@ -77,6 +81,10 @@ const CartProvider = ({ children }) => {
   useEffect(() => {
     user ? createOrder() : clearOrder();
   }, [user]);
+
+  // useEffect(() => {
+  //   loadOrderToStorage(order);
+  // }, [order]);
 
   const values = {
     order,

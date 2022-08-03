@@ -25,7 +25,7 @@ const Header = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav me-auto">
               <li><NavLink className='nav-link text-white' to='/'>Inicio</NavLink></li>
-              {token && <li><NavLink className='nav-link text-white' to='/home'>Menu</NavLink></li>}
+              {token && <li><NavLink className='nav-link text-white' to='/menu'>Menu</NavLink></li>}
               {user?.role === 'ADMIN_ROLE' && <li><NavLink className='nav-link text-white' to='/admin'>Admin</NavLink></li>}
             </ul>
             <ul className='navbar-nav'>
