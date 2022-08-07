@@ -1,15 +1,12 @@
-import React from 'react';
 import useCart from '../../../hooks/useCart';
 import cardImage from '../../../assets/food-card-img.jpg'
 
 const ProductCard = ({ product }) => {
   const { addProduct, removeProduct } = useCart();
 
-
   const handleAdd = () => {
     addProduct(product);
   }
-
   const handleRemove = () => {
     removeProduct(product);
   }

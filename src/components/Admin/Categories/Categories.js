@@ -1,42 +1,49 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import useAuth from '../../../hooks/useAuth';
-
-import { Button, Space, Table, Tooltip } from 'antd';
-import { DeleteFilled } from '@ant-design/icons';
-import Column from 'antd/lib/table/Column';
+import Table from 'react-bootstrap/Table';
+import useFetch from '../../../hooks/useFetch';
 
 const Categories = () => {
-  const [categories, setCategories] = useState([]);
-
-  const { token } = useAuth();
-  const URL = 'http://localhost:3400/api/category'
-  const AuthStr = 'Bearer '.concat(token);
-
-  const getCategories = async () => {
-    const { data } = await axios.get(URL, { headers: { Authorization: AuthStr } });
-    setCategories(data.categories);
-  }
-  
-  useEffect(() => { getCategories(); });
+  const categoriesFetch = useFetch('http://localhost:3400/api/category');
   return (
-    <>
-    <Table dataSource={categories}>
-      <Column title="Nombre" dataIndex="name" key="fullName" />
-      <Column title="Estado" dataIndex="active" key="active" />
-      <Column
-        title="Opciones"
-        key="action"
-        render={() => (
-          <Space size="middle">
-            <Tooltip title="delete">
-              <Button type="primary" shape="circle" icon={<DeleteFilled />} danger />
-            </Tooltip>
-          </Space>
-        )}
-      />
-    </Table>
-  </>
+    <section>
+      <div className="d-flex justify-content-between py-4">
+        <h2 className="fw-bold">Categorias</h2>
+        <button type="button" className="btn btn-dark fw-bold fs-5 rounded-0"><i className="bi bi-plus-lg" ></i> Agregar Categoria</button>
+      </div>
+      <div className="d-flex flex-column flex-md-row justify-content-between pb-2 py-3">
+        {(categoriesFetch.data?.categories.length === 0) ? <h3 className="fs-4 mb-3 mb-md-0 ps-1">No se encontraron categorias.</h3> : <h3 className="fs-4 mb-3 mb-md-0 ps-1">{categoriesFetch.data?.categories.length} Categorias</h3>}
+        <div>
+          <form className="d-flex">
+            <input className="form-control rounded-0 me-2" type="search" placeholder="Categoria" />
+            <button className="btn btn-dark text-white rounded-0"><i className="bi bi-search"></i></button>
+          </form>
+        </div>
+      </div>   
+      <Table responsive striped bordered hover>
+        <thead className='table-dark'>
+          <tr>
+            <th>Categoria</th>
+            <th>Estado</th>
+            <th>Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        {categoriesFetch.data?.categories.map(category => {
+          return(
+            <tr key={category._id}>
+              <td className='col-5'>{category.name}</td>
+              <td className='col-5'>{category.active.toString()}</td>
+              <td className='col-2'>
+                <div className="d-flex justify-content-evenly">
+                  <button className="btn p-0"><i className="bi bi-pencil text-warning"></i></button>
+                  <button className="btn p-0"><i className="bi bi-trash text-danger"></i></button>
+                </div>
+              </td>
+            </tr>
+          );
+        })}
+        </tbody>
+      </Table>
+    </section>
   );
 };
 

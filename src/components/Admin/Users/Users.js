@@ -1,65 +1,53 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
-import { Button, Space, Table, Tooltip } from 'antd';
-import { DeleteFilled, EditFilled } from '@ant-design/icons';
-import Column from 'antd/lib/table/Column';
-
-import ModifyUserModal from './ModifyUserModal';
-import useAuth from '../../../hooks/useAuth';
+import Table from 'react-bootstrap/Table';
+import useFetch from '../../../hooks/useFetch';
 
 const Users = () => {
-  const [users, setUsers] = useState([]);
-  const [visible, setVisible] = useState(false);
-
-  const { token } = useAuth();
-  const URL = 'http://localhost:3400/api/user'
-  const AuthStr = 'Bearer '.concat(token);
-
-  const getUsers = async () => {
-    const { data } = await axios.get(URL, { headers: { Authorization: AuthStr } });
-    setUsers(data.users);
-  }
-  
-  useEffect(() => { 
-    getUsers() 
-  });
-
-  const onCreate = (values) => {
-    console.log('Received values of form: ', values);
-    setVisible(false);
-  };
-
+  const usersFetch = useFetch('http://localhost:3400/api/user');
   return (
-    <>
-      <Table dataSource={users}>
-        <Column title="Nombre" dataIndex="fullName" key="fullName" />
-        <Column title="Email" dataIndex="email" key="email" />
-        <Column title="Estado" dataIndex="active" key="active" />
-        <Column title="Rol" dataIndex="role" key="role" />
-        <Column
-          title="Opciones"
-          key="action"
-          render={() => (
-            <Space size="middle">
-              <Tooltip title="modify">
-                <Button onClick={ () => {setVisible(true); }} type="primary" shape="circle" icon={<EditFilled />} />
-              </Tooltip>
-              <Tooltip title="delete">
-                <Button type="primary" shape="circle" icon={<DeleteFilled />} danger />
-              </Tooltip>
-            </Space>
-          )}
-        />
+    <section>
+      <div className="d-flex justify-content-between py-4">
+        <h2 className="fw-bold">Usuarios</h2>
+        <button type="button" className="btn btn-dark fw-bold fs-5 rounded-0"><i className="bi bi-plus-lg" ></i> Agregar Usuario</button>
+      </div>
+      <div className="d-flex flex-column flex-md-row justify-content-between pb-2 py-3">
+        {(usersFetch.data?.users.length === 0) ? <h3 className="fs-4 mb-3 mb-md-0 ps-1">No se encontraron usuarios.</h3> : <h3 className="fs-4 mb-3 mb-md-0 ps-1">{usersFetch.data?.users.length} Usuarios</h3>}
+        <div>
+          <form className="d-flex">
+            <input className="form-control me-2 rounded-0" type="search" placeholder="Email del usuario" />
+            <button className="btn btn-dark text-white rounded-0"><i className="bi bi-search"></i></button>
+          </form>
+        </div>
+      </div>             
+      <Table responsive striped bordered hover>
+        <thead className='table-dark'>
+          <tr>
+            <th>Nombre completo</th>
+            <th>Email</th>
+            <th>Estado</th>
+            <th>Rol</th>
+            <th>Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        {usersFetch.data?.users.map(user => {
+          return(
+            <tr key={user._id}>
+              <td>{user.fullName}</td>
+              <td>{user.email}</td>
+              <td>{user.active.toString()}</td>
+              <td>{user.role}</td>
+              <td>
+                <div className="d-flex justify-content-evenly">
+                  <button className="btn p-0"><i className="bi bi-pencil text-warning"></i></button>
+                  <button className="btn p-0"><i className="bi bi-trash text-danger"></i></button>
+                </div>
+              </td>
+          </tr>
+          );
+        })}
+        </tbody>
       </Table>
-      <ModifyUserModal
-        visible={visible}
-        onCreate={onCreate}
-        onCancel={() => {
-          setVisible(false);
-        }}
-      />
-    </>
+    </section>
   );
 };
 

@@ -1,26 +1,24 @@
-import React from 'react';
-import { Outlet, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { Sidebar, Users, Orders, Products, Categories } from '../../components/Admin/index';
-
+import './index.css';
 
 const AdminPanel = () => {
   return (
-    <section className='container'>
-      <div className='row'>
-        <div className='col-2 bg-primary'>
+    <main className='container'>
+      <div className='row screen-mh py-4'>
+        <div className='col col-12 col-md-12 col-lg-2 p-0 pb-4 pb-lg-0 bg-dark'>
           <Sidebar />
         </div>
-        <div className='col-10 bg-dark p-3'>
+        <div className='col col-12 col-md-12 col-lg-10 p-3 bg-light'>
           <Routes>
             <Route path='users' element={<Users />} />
             <Route path='orders' element={<Orders />} />
             <Route path='products' element={<Products />} />
             <Route path='categories' element={<Categories />} />
           </Routes>
-          <Outlet />
         </div>
       </div>
-    </section>
+    </main>
   )
 };
 

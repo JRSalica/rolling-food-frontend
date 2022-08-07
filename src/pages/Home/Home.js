@@ -1,4 +1,3 @@
-import React from 'react';
 import useAuth from '../../hooks/useAuth';
 import heroCover from '../../assets/hero-cover.jpg';
 import './index.css'; 

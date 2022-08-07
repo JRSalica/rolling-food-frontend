@@ -1,26 +1,36 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const useFetch = (URL, AuthStr) =>{
-  const [data, setData] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+const useFetch = (URL) =>{
+  const [dataFetch, setDataFetch] = useState({
+    loading: true,
+    data: null,
+    error: null,
+  });
+
+  const fetchData = async () =>{
+    try {
+      const { data } = await axios(URL);
+      setDataFetch({
+        loading: false,
+        data: data,
+        error: null,
+      });
+      
+    } catch (error) {
+      setDataFetch({
+        loading: false,
+        data: null,
+        error,
+      });
+    }
+  };
 
   useEffect(() => {
-    setLoading(true)
-    axios.get(URL, {headers: {'Authorization': AuthStr}})
-    .then(res => {
-        setLoading(false);
-        console.log(res);
-        setData(res);
-    })
-    .catch(error => {
-        setLoading(false)
-        setError(error)
-    })
-  }, [URL, AuthStr]);
+    fetchData();
+  }, [URL]);
 
-  return { data, loading, error };
+  return dataFetch;
 };
 
 export default useFetch;

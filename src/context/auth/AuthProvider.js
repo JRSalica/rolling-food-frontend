@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import jwt_decode from "jwt-decode";
@@ -9,21 +9,21 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const navigate = useNavigate();
-  let location = useLocation();
+  const location = useLocation();
 
-  const handleLogin = async ({ email, password }) => {
-    const res = await axios.post('http://localhost:3400/api/auth/login', 
-    { 
-      email, 
-      password
-    });
-    let user = res.data.user;
-    localStorage.setItem('token', res.data.token);
-    localStorage.setItem('user', JSON.stringify(user));
-    setToken(res.data.token);
-    setUser(user);
-    // setAuthTokenAxios(res.data.token);
-    navigate('/menu');
+  const handleLogin = async (userData) => {
+    try {
+      const { data } = await axios.post('http://localhost:3400/api/auth/login', userData);
+      const { user, token } = data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      setToken(token);
+      setUser(user);
+      setAuthTokenAxios(token);
+      navigate('/menu');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleLogout = () => {
@@ -32,42 +32,36 @@ const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     navigate('/');
-  }
+  };
 
-  const handleRegister = async ({ fullName, email, password }) => {
+  const handleRegister = async (userData) => {
     try {
-      await axios.post('http://localhost:3400/api/auth/register', 
-      {
-        fullName,
-        email,
-        password
-      });
+      await axios.post('http://localhost:3400/api/auth/register', userData);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
-  }
+  };
 
   const loadDataFromStorage = () => {
-    setToken(localStorage.getItem('token'));
-    setUser(JSON.parse(localStorage.getItem('user')));
+    localStorage.getItem('token') && setToken(localStorage.getItem('token'));
+    localStorage.getItem('user') && setUser(JSON.parse(localStorage.getItem('user')));
   };
   
-  useEffect(() => {
-    loadDataFromStorage();
-  }, []);
-
   const checkExpiredToken = () => {
     if(token !== null){
       let decodedToken = jwt_decode(token);
       let currentDate = new Date();
-      if ((decodedToken.exp * 1000) < currentDate.getTime()) {
-        handleLogout();  
-      } 
+      ((decodedToken.exp * 1000) < currentDate.getTime()) && handleLogout();  
     }
-  }
+  };
+
+  useEffect(() => {
+    loadDataFromStorage();
+  }, []);
 
   useEffect(() => {
     checkExpiredToken();
+    setAuthTokenAxios(token);
   }, [location]);
 
   const value = {

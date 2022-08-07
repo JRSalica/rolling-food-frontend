@@ -1,45 +1,55 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import useAuth from '../../../hooks/useAuth';
-
-import { Button, Space, Table, Tooltip } from 'antd';
-import { DeleteFilled } from '@ant-design/icons';
-import Column from 'antd/lib/table/Column';
+import Table from 'react-bootstrap/Table';
+import useFetch from '../../../hooks/useFetch';
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
-
-  const { token } = useAuth();
-  const URL = 'http://localhost:3400/api/product'
-  const AuthStr = 'Bearer '.concat(token);
-
-  const getProducts = async () => {
-    const { data } = await axios.get(URL, { headers: { Authorization: AuthStr } });
-    setProducts(data.products);
-  }
-  
-  useEffect(() => { getProducts(); });
-
+  const productsFetch = useFetch('http://localhost:3400/api/product');
   return (
-    <>
-      <Table dataSource={products}>
-        <Column title="Nombre" dataIndex="fullName" key="fullName" />
-        <Column title="Email" dataIndex="email" key="email" />
-        <Column title="Estado" dataIndex="active" key="active" />
-        <Column title="Rol" dataIndex="role" key="role" />
-        <Column
-          title="Opciones"
-          key="action"
-          render={() => (
-            <Space size="middle">
-              <Tooltip title="delete">
-                <Button type="primary" shape="circle" icon={<DeleteFilled />} danger />
-              </Tooltip>
-            </Space>
-          )}
-        />
+    <section>
+      <div className="d-flex justify-content-between py-4">
+        <h2 className="fw-bold">Productos</h2>
+        <button type="button" className="btn btn-dark fw-bold fs-5 rounded-0"><i className="bi bi-plus-lg" ></i> Agregar Producto</button>
+      </div>
+      <div className="d-flex flex-column flex-md-row justify-content-between pb-2 py-3">
+        {(productsFetch.data?.products.length === 0) ? <h3 className="fs-4 mb-3 mb-md-0 ps-1">No se encontraron productos.</h3> : <h3 className="fs-4 mb-3 mb-md-0 ps-1">{productsFetch.data?.products.length} Productos</h3>}
+        <div>
+          <form className="d-flex">
+            <input className="form-control me-2 rounded-0" type="search" placeholder="Nombre del producto" />
+            <button className="btn btn-dark text-white rounded-0"><i className="bi bi-search"></i></button>
+          </form>
+        </div>
+      </div>   
+      <Table responsive striped bordered hover>
+        <thead className='table-dark'>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Categoria</th>
+            <th>Precio</th>
+            <th>Estado</th>
+            <th>Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        {productsFetch.data?.products.map(product => {
+          return(
+            <tr key={product._id}>
+              <td>{product.name}</td>
+              <td>{product.description}</td>
+              <td>{product.category.name}</td>
+              <td>${product.price}</td>
+              <td>{(product.active === true) ? 'Habilitado' : 'Deshabilitado'}</td>
+              <td>
+                <div className="d-flex justify-content-evenly">
+                  <button className="btn p-0"><i className="bi bi-pencil text-warning"></i></button>
+                  <button className="btn p-0"><i className="bi bi-trash text-danger"></i></button>
+                </div>
+              </td>
+            </tr>
+          );
+        })}
+        </tbody>
       </Table>
-    </>
+    </section>
   );
 };
 

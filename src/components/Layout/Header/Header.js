@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink, useNavigate } from "react-router-dom";
 import useAuth from '../../../hooks/useAuth';
 import rollingFoodLogo from '../../../assets/rollingfood-logo.svg';
@@ -7,7 +6,7 @@ const Header = () => {
   const { user, token, onLogout } = useAuth();
   const navigate = useNavigate();
 
-  const openCart = () =>{
+  const goToCart = () =>{
     navigate('/cart');
   };
 
@@ -29,7 +28,7 @@ const Header = () => {
               {user?.role === 'ADMIN_ROLE' && <li><NavLink className='nav-link text-white' to='/admin'>Admin</NavLink></li>}
             </ul>
             <ul className='navbar-nav'>
-              {token && <li><button className='btn btn-success mx-2' type='button' onClick={openCart}><i className="bi bi-cart"></i></button></li>}
+              {token && <li><button className='btn btn-success mx-2' type='button' onClick={goToCart}><i className="bi bi-cart"></i></button></li>}
               {!token && <li><NavLink className='nav-link text-white' to='/login'>Ingresar</NavLink></li>}
               {!token && <li><NavLink className='nav-link text-white' to='/register'>Registrarme</NavLink></li>}
               {token && <li><button className='btn btn-danger' type='button' onClick={onLogout}>Logout</button></li>}
