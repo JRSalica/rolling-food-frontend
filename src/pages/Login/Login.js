@@ -10,9 +10,9 @@ import useAuth from '../../hooks/useAuth';
 const Login = () => {
   const { onLogin } = useAuth();
 
-  const handleLogin = (e) =>{
-    e.preventDefault();
-    let dataElements = e.target.elements;
+  const handleLogin = (ev) =>{
+    ev.preventDefault();
+    let dataElements = ev.target.elements;
     const userData = {
       email: dataElements.email.value,
       password: dataElements.password.value,
