@@ -4,7 +4,7 @@ import { Home, Menu, AdminPanel, Login, Register, NotFound } from './pages';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Cart from './pages/Cart/Cart';
 
-function App() {
+const App = () => {
   return (
     <>
       <Header />

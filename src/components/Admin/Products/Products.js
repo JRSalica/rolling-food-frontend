@@ -5,6 +5,7 @@ import useFetch from '../../../hooks/useFetch';
 import axios from 'axios';
 import AddProduct from './AddProduct';
 import ModifyProduct from './ModifyProduct';
+import axiosConfig from '../../../config/axios';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -14,8 +15,8 @@ const Products = () => {
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   
-  const productsFetch = useFetch('http://localhost:3400/api/product');
-  const categoriesFetch = useFetch('http://localhost:3400/api/category');
+  const productsFetch = useFetch('product');
+  const categoriesFetch = useFetch('category');
 
   const hideAdd = () => setShowAdd(false);
   const openAdd = () => setShowAdd(true);
@@ -33,7 +34,7 @@ const Products = () => {
   }
 
   const addProduct = async(productData) => {
-    const { data: { newProduct } } = await axios.post('http://localhost:3400/api/product/', productData);
+    const { data: { newProduct } } = await axiosConfig.post('product/', productData);
     let newProducts = products;
     newProducts = [...newProducts, newProduct];
     setProducts(newProducts);

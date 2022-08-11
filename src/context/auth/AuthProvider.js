@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
 import jwt_decode from "jwt-decode";
 import AuthContext from './AuthContext';
 import setAuthTokenAxios from '../../utils/setAuthToken';
+import axiosConfig from '../../config/axios';
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -13,7 +13,7 @@ const AuthProvider = ({ children }) => {
 
   const handleLogin = async (userData) => {
     try {
-      const { data } = await axios.post('http://localhost:3400/api/auth/login', userData);
+      const { data } = await axiosConfig.post('auth/login', userData);
       const { user, token } = data;
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
 
   const handleRegister = async (userData) => {
     try {
-      await axios.post('http://localhost:3400/api/auth/register', userData);
+      await axiosConfig.post('auth/register', userData);
     } catch (error) {
       console.error(error);
     }

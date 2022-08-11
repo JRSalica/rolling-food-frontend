@@ -1,10 +1,10 @@
-import axios from "axios";
+import axiosConfig from "../config/axios";
 
 const setAuthTokenAxios = token => {
   if(token){
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+    axiosConfig.defaults.headers.common['Authorization'] = 'Bearer ' + token;
   } else {
-    delete axios.defaults.headers.common['Authorization'];
+    delete axiosConfig.defaults.headers.common['Authorization'];
   }
 };
 

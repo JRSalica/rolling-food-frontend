@@ -2,7 +2,7 @@ import Table from 'react-bootstrap/Table';
 import useFetch from '../../../hooks/useFetch';
 
 const Users = () => {
-  const usersFetch = useFetch('http://localhost:3400/api/user');
+  const usersFetch = useFetch('user');
   return (
     <section>
       <div className="d-flex justify-content-between py-4">

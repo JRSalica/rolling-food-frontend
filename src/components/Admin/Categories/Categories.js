@@ -2,7 +2,7 @@ import Table from 'react-bootstrap/Table';
 import useFetch from '../../../hooks/useFetch';
 
 const Categories = () => {
-  const categoriesFetch = useFetch('http://localhost:3400/api/category');
+  const categoriesFetch = useFetch('category');
   return (
     <section>
       <div className="d-flex justify-content-between py-4">
