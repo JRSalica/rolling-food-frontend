@@ -1,15 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap');
 
-*{
-  font-family: 'Nunito Sans', sans-serif;
+* {
+	font-family: 'Nunito Sans', sans-serif;
 }
 
-main{
-  background-color: #E8E8E8;
-  min-height: calc(100vh - 193px);
+main {
+	background-color: #e8e8e8;
+	min-height: calc(100vh - 193px);
 }
 
-.filter{
-  filter: invert(52%) sepia(3%) saturate(1588%) hue-rotate(198deg) brightness(100%) contrast(81%);
+.filter {
+	filter: invert(52%) sepia(3%) saturate(1588%) hue-rotate(198deg)
+		brightness(100%) contrast(81%);
 }

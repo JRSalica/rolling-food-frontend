@@ -1,14 +1,13 @@
 import { Form, Input, Modal } from 'antd';
-import React from 'react';
 
 const ModifyUserModal = ({ visible, onCreate, onCancel }) => {
   const [form] = Form.useForm();
   return (
     <Modal
       visible={visible}
-      title="Modificar usuario"
-      okText="Modificar"
-      cancelText="Cancelar"
+      title='Modificar usuario'
+      okText='Modificar'
+      cancelText='Cancelar'
       onCancel={onCancel}
       onOk={() => {
         form
@@ -24,15 +23,15 @@ const ModifyUserModal = ({ visible, onCreate, onCancel }) => {
     >
       <Form
         form={form}
-        layout="vertical"
-        name="form_in_modal"
+        layout='vertical'
+        name='form_in_modal'
         initialValues={{
           modifier: 'public',
         }}
       >
         <Form.Item
-          name="Nombre completo"
-          label="Nombre completo"
+          name='Nombre completo'
+          label='Nombre completo'
           rules={[
             {
               type: 'string',
@@ -44,8 +43,8 @@ const ModifyUserModal = ({ visible, onCreate, onCancel }) => {
         >
           <Input />
         </Form.Item>
-        <Form.Item name="description" label="Description">
-          <Input type="textarea" />
+        <Form.Item name='description' label='Description'>
+          <Input type='textarea' />
         </Form.Item>
       </Form>
     </Modal>

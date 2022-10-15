@@ -1,5 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
-import { Sidebar, Users, Orders, Products, Categories } from '../../components/Admin/index';
+import {
+  Sidebar, Users, Orders, Products, Categories,
+} from '../../components/Admin/index';
 import './index.css';
 
 const AdminPanel = () => {
@@ -19,7 +21,7 @@ const AdminPanel = () => {
         </div>
       </div>
     </main>
-  )
+  );
 };
 
 export default AdminPanel;

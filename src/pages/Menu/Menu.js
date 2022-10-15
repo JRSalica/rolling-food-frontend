@@ -8,8 +8,9 @@ const Menu = () => {
     <main className='container p-4'>
       <section>
         {categoriesFetch.data?.categories.map(category => {
-          return(
-              <CategoryGroup key={category._id} category={category} products={productsFetch} />
+          return (
+            // eslint-disable-next-line no-underscore-dangle
+            <CategoryGroup key={category._id} category={category} products={productsFetch} />
           );
         })}
       </section>
