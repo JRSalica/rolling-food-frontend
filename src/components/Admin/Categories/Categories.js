@@ -10,7 +10,7 @@ const Categories = () => {
         <button type='button' className='btn btn-dark fw-bold fs-5 rounded-0'><i className='bi bi-plus-lg' ></i> Agregar Categoria</button>
       </div>
       <div className='d-flex flex-column flex-md-row justify-content-between pb-2 py-3'>
-        {(categoriesFetch.data?.categories.length === 0) ? <h3 className='fs-4 mb-3 mb-md-0 ps-1'>No se encontraron categorias.</h3> : <h3 className='fs-4 mb-3 mb-md-0 ps-1'>{categoriesFetch.data?.categories.length} Categorias</h3>}
+        {(categoriesFetch?.data?.categories.length === 0) ? <h3 className='fs-4 mb-3 mb-md-0 ps-1'>No se encontraron categorias.</h3> : <h3 className='fs-4 mb-3 mb-md-0 ps-1'>{categoriesFetch.data?.categories.length} Categorias</h3>}
         <div>
           <form className='d-flex'>
             <input className='form-control rounded-0 me-2' type='search' placeholder='Categoria' />
@@ -27,10 +27,9 @@ const Categories = () => {
           </tr>
         </thead>
         <tbody>
-          {categoriesFetch.data?.categories.map(category => {
+          {categoriesFetch.data?.categories?.map(category => {
             return (
-              // eslint-disable-next-line no-underscore-dangle
-              <tr key={category._id}>
+              <tr key={category.id}>
                 <td className='col-5'>{category.name}</td>
                 <td className='col-5'>{category.active.toString()}</td>
                 <td className='col-2'>

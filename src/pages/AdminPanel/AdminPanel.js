@@ -6,7 +6,7 @@ import './index.css';
 
 const AdminPanel = () => {
   return (
-    <main className='container'>
+    <section className='container'>
       <div className='row screen-mh py-4'>
         <div className='col col-12 col-md-12 col-lg-2 p-0 pb-4 pb-lg-0 bg-dark'>
           <Sidebar />
@@ -20,7 +20,7 @@ const AdminPanel = () => {
           </Routes>
         </div>
       </div>
-    </main>
+    </section>
   );
 };
 

@@ -1,28 +1,24 @@
-/* eslint-disable no-unused-expressions */
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-// eslint-disable-next-line camelcase
-import jwt_decode from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import AuthContext from './AuthContext';
 import setAuthTokenAxios from '../../utils/setAuthToken';
 import axiosConfig from '../../config/axios';
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const [userToken, setUserToken] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLogin = async (userData) => {
     try {
-      const { data } = await axiosConfig.post('auth/login', userData);
-      // eslint-disable-next-line no-shadow
-      const { user, token } = data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      setToken(token);
-      setUser(user);
-      setAuthTokenAxios(token);
+      const { data: loginResponse } = await axiosConfig.post('auth/login', userData);
+      const { user: resUser, token: resToken } = loginResponse;
+      localStorage.setItem('token', resToken);
+      localStorage.setItem('user', JSON.stringify(resUser));
+      setUserToken(resToken);
+      setUser(resUser);
       navigate('/menu');
     } catch (error) {
       console.error(error);
@@ -32,7 +28,7 @@ const AuthProvider = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    setToken(null);
+    setUserToken(null);
     setUser(null);
     navigate('/');
   };
@@ -46,15 +42,15 @@ const AuthProvider = ({ children }) => {
   };
 
   const loadDataFromStorage = () => {
-    localStorage.getItem('token') && setToken(localStorage.getItem('token'));
-    localStorage.getItem('user') && setUser(JSON.parse(localStorage.getItem('user')));
+    if (localStorage.getItem('token')) setUserToken(localStorage.getItem('token'));
+    if (localStorage.getItem('user')) setUser(JSON.parse(localStorage.getItem('user')));
   };
 
   const checkExpiredToken = () => {
-    if (token !== null) {
-      const decodedToken = jwt_decode(token);
+    if (userToken !== null) {
+      const decodedToken = jwtDecode(userToken);
       const currentDate = new Date();
-      ((decodedToken.exp * 1000) < currentDate.getTime()) && handleLogout();
+      if ((decodedToken.exp * 1000) < currentDate.getTime()) handleLogout();
     }
   };
 
@@ -63,13 +59,17 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    setAuthTokenAxios(userToken);
+  }, [user]);
+
+  useEffect(() => {
     checkExpiredToken();
-    setAuthTokenAxios(token);
+    // setAuthTokenAxios(userToken);
   }, [location]);
 
   const value = {
     user,
-    token,
+    token: userToken,
     onLogin: handleLogin,
     onLogout: handleLogout,
     onRegister: handleRegister,

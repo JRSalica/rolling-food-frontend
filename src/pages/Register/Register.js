@@ -22,7 +22,7 @@ const Register = () => {
   };
 
   return (
-    <main className='d-flex align-items-center'>
+    <section className='d-flex align-items-center'>
       <Container className='register-container'>
         <Row className='d-flex justify-content-center'>
           <Col xs={4} className='pb-0 py-md-4'>
@@ -55,7 +55,7 @@ const Register = () => {
           </Col>
         </Row>
       </Container>
-    </main>
+    </section>
   );
 };
 

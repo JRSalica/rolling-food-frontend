@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -49,8 +48,8 @@ const ModifyProduct = ({
           <Form.Group className='mb-3' controlId='productCategory'>
             <Form.Label>Categoria:</Form.Label>
             <Form.Select aria-label='Seleccione la categoria'>
-              {categoriesFetch.data?.categories.map(category => <option key={category._id}
-                value={category._id}>{category.name}</option>)}
+              {categoriesFetch.data?.categories.map(category => <option key={category.id}
+                value={category.id}>{category.name}</option>)}
             </Form.Select>
           </Form.Group>
 

@@ -13,9 +13,9 @@ const Footer = () => {
       </div>
       <div className='nav col-md-3 me-3 justify-content-end'>
         <ul className='d-flex flex-row mb-0 list-unstyled'>
-          <li className='ms-3'><i className='bi bi-github text-white fs-3'></i></li>
-          <li className='ms-3'><i className='bi bi-instagram text-white fs-3'></i></li>
-          <li className='ms-3'><i className='bi bi-facebook text-white fs-3'></i></li>
+          <li className='ms-3'><i className='bi bi-github text-white fs-3' /></li>
+          <li className='ms-3'><i className='bi bi-instagram text-white fs-3' /></li>
+          <li className='ms-3'><i className='bi bi-facebook text-white fs-3' /></li>
         </ul>
       </div>
     </footer>

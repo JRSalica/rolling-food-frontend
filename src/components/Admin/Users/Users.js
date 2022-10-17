@@ -10,7 +10,7 @@ const Users = () => {
         <button type='button' className='btn btn-dark fw-bold fs-5 rounded-0'><i className='bi bi-plus-lg' ></i> Agregar Usuario</button>
       </div>
       <div className='d-flex flex-column flex-md-row justify-content-between pb-2 py-3'>
-        {(usersFetch.data?.users.length === 0) ? <h3 className='fs-4 mb-3 mb-md-0 ps-1'>No se encontraron usuarios.</h3> : <h3 className='fs-4 mb-3 mb-md-0 ps-1'>{usersFetch.data?.users.length} Usuarios</h3>}
+        {(usersFetch.data?.users?.length === 0) ? <h3 className='fs-4 mb-3 mb-md-0 ps-1'>No se encontraron usuarios.</h3> : <h3 className='fs-4 mb-3 mb-md-0 ps-1'>{usersFetch.data?.users?.length} Usuarios</h3>}
         <div>
           <form className='d-flex'>
             <input className='form-control me-2 rounded-0' type='search' placeholder='Email del usuario' />
@@ -29,10 +29,9 @@ const Users = () => {
           </tr>
         </thead>
         <tbody>
-          {usersFetch.data?.users.map(user => {
+          {usersFetch.data?.users?.map(user => {
             return (
-              // eslint-disable-next-line no-underscore-dangle
-              <tr key={user._id}>
+              <tr key={user.id}>
                 <td>{user.fullName}</td>
                 <td>{user.email}</td>
                 <td>{user.active.toString()}</td>

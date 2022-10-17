@@ -5,16 +5,13 @@ const Menu = () => {
   const categoriesFetch = useFetch('category');
   const productsFetch = useFetch('product');
   return (
-    <main className='container p-4'>
-      <section>
-        {categoriesFetch.data?.categories.map(category => {
-          return (
-            // eslint-disable-next-line no-underscore-dangle
-            <CategoryGroup key={category._id} category={category} products={productsFetch} />
-          );
-        })}
-      </section>
-    </main>
+    <section className='container p-4'>
+      {categoriesFetch?.data?.categories?.map(category => {
+        return (
+          <CategoryGroup key={category?.id} category={category} products={productsFetch} />
+        );
+      })}
+    </section>
   );
 };
 

@@ -20,10 +20,9 @@ const Orders = () => {
           </tr>
         </thead>
         <tbody>
-          {ordersFetch.data?.orders.map(order => {
+          {ordersFetch?.data?.orders?.map(order => {
             return (
-              // eslint-disable-next-line no-underscore-dangle
-              <tr key={order._id}>
+              <tr key={order.id}>
                 <td>{order.createdAt}</td>
                 <td>{order.user.fullName}</td>
                 <td>{order.products.length}</td>

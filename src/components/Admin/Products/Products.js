@@ -1,11 +1,9 @@
-/* eslint-disable no-underscore-dangle */
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import ProductsTable from './ProductsTable';
-import DeleteProduct from './DeleteProduct';
 import useFetch from '../../../hooks/useFetch';
+import ProductsTable from './ProductsTable';
 import AddProduct from './AddProduct';
 import ModifyProduct from './ModifyProduct';
+import DeleteProduct from './DeleteProduct';
 import axiosConfig from '../../../config/axios';
 
 const Products = () => {
@@ -43,18 +41,17 @@ const Products = () => {
   };
 
   const updateProduct = async (productData) => {
-    const { data: { updatedProduct } } = await axios.put('http://localhost:3400/api/product/'
-      .concat(selectedProduct._id), productData);
+    const { data: { updatedProduct } } = await axiosConfig.put('product/'.concat(selectedProduct.id), productData);
     const newProducts = products;
-    const index = newProducts.findIndex(product => product._id === updatedProduct._id);
+    const index = newProducts.findIndex(product => product.id === updatedProduct.id);
     newProducts[index] = updatedProduct;
     setProducts(newProducts);
     hideUpdate();
   };
 
   const deleteProduct = async () => {
-    const { data: { deletedProduct } } = await axios.delete('http://localhost:3400/api/product/'.concat(selectedProduct._id));
-    const newProducts = products.filter(product => product._id !== deletedProduct._id);
+    const { data: { deletedProduct } } = await axiosConfig.delete('product/'.concat(selectedProduct.id));
+    const newProducts = products.filter(product => product.id !== deletedProduct.id);
     setProducts(newProducts);
     hideDelete();
   };

@@ -17,8 +17,7 @@ const ProductsTable = ({ products, openDelete, openUpdate }) => {
         <tbody>
           {products?.map(product => {
             return (
-              // eslint-disable-next-line no-underscore-dangle
-              <tr key={product._id}>
+              <tr key={product.id}>
                 <td>{product.name}</td>
                 <td>{product.description}</td>
                 <td>{product.category.name}</td>

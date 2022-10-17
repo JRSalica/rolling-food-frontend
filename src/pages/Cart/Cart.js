@@ -6,40 +6,37 @@ const Cart = () => {
     order, addProduct, removeProduct, clearOrder,
   } = useCart();
   return (
-    <main className='container p-4'>
-      <section className='cart-section'>
-        {order.products.length !== 0 ? (
-          <>
-            <h2 className='fs-2 mb-3'>Tu orden: </h2>
-            <div className='d-flex justify-content-around'>
-              <div className='col-8 cart-list'>
-                <ul className='list-unstyled'>
-                  {order.products.map(product => {
-                    // eslint-disable-next-line no-underscore-dangle
-                    return <CartItem key={product._id} product={product}
-                      addProduct={addProduct} removeProduct={removeProduct} />;
-                  })}
+    <section className='cart-section container p-4'>
+      {order?.products?.length !== 0 ? (
+        <>
+          <h2 className='fs-2 mb-3'>Tu orden: </h2>
+          <div className='d-flex justify-content-around'>
+            <div className='col-8 cart-list'>
+              <ul className='list-unstyled'>
+                {order?.products.map(product => {
+                  return <CartItem key={product?.id} product={product}
+                    addProduct={addProduct} removeProduct={removeProduct} />;
+                })}
+              </ul>
+            </div>
+            <div className='col-3 cart-checkout'>
+              <div className='card'>
+                <div className='card-header'>Resumen</div>
+                <ul className='list-group list-group-flush'>
+                  <li className='list-group-item'>Cantidad de productos: {order?.products?.length}</li>
+                  <li className='list-group-item'>Envio: $100</li>
+                  <li className='list-group-item'>Total a pagar: ${order?.amount}</li>
                 </ul>
-              </div>
-              <div className='col-3 cart-checkout'>
-                <div className='card'>
-                  <div className='card-header'>Resumen</div>
-                  <ul className='list-group list-group-flush'>
-                    <li className='list-group-item'>Cantidad de productos: {order.products.length}</li>
-                    <li className='list-group-item'>Envio: $100</li>
-                    <li className='list-group-item'>Total a pagar: ${order.amount}</li>
-                  </ul>
-                  <div className='card-footer d-flex justify-content-around'>
-                    <button className='btn btn-success me-2'>Pagar</button>
-                    <button className='btn btn-danger' onClick={clearOrder}>Vaciar</button>
-                  </div>
+                <div className='card-footer d-flex justify-content-around'>
+                  <button className='btn btn-success me-2'>Pagar</button>
+                  <button className='btn btn-danger' onClick={clearOrder}>Vaciar</button>
                 </div>
               </div>
             </div>
-          </>
-        ) : <h2 className='text-center '>No tienes nada para comprar</h2>}
-      </section>
-    </main>
+          </div>
+        </>
+      ) : <h2 className='text-center '>No tienes nada para comprar</h2>}
+    </section>
   );
 };
 
