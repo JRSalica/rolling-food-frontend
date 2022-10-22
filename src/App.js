@@ -10,7 +10,7 @@ const App = () => {
   return (
     <>
       <Header />
-      <main>
+      <main className='container-fluid px-0 d-flex align-items-center'>
         <Routes>
           <Route index path='/' element={<Home />} />
           <Route element={<ProtectedRoute />}>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import AuthContext from './AuthContext';
+import useNotification from '../../hooks/useNotification';
 import setAuthTokenAxios from '../../utils/setAuthToken';
 import axiosConfig from '../../config/axios';
 
@@ -10,6 +11,7 @@ const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { showSuccess, showError } = useNotification();
 
   const handleLogin = async (userData) => {
     try {
@@ -19,9 +21,10 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(resUser));
       setUserToken(resToken);
       setUser(resUser);
+      showSuccess(loginResponse.message);
       navigate('/menu');
     } catch (error) {
-      console.error(error);
+      showError(error.response.data.message);
     }
   };
 
@@ -35,9 +38,10 @@ const AuthProvider = ({ children }) => {
 
   const handleRegister = async (userData) => {
     try {
-      await axiosConfig.post('auth/register', userData);
+      const { data: registerResponse } = await axiosConfig.post('auth/register', userData);
+      showSuccess(registerResponse.message);
     } catch (error) {
-      console.error(error);
+      showError(error.response.data.message);
     }
   };
 
