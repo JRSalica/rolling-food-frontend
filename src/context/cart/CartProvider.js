@@ -4,98 +4,109 @@ import useAuth from '../../hooks/useAuth';
 import CartContext from './CartContext';
 
 const CartProvider = ({ children }) => {
-  const [order, setOrder] = useState(null);
+  const [currentOrder, setCurrentOrder] = useState(null);
   const { user } = useAuth();
   const location = useLocation();
 
-  const loadOrderToStorage = (order) =>{
-    localStorage.setItem('order', JSON.stringify(order));
+  const calcTotal = products => {
+    let total = 0;
+    products.forEach(product => { total += product.totalPrice; });
+    return total;
+  };
+
+  const loadOrderToStorage = (actualOrder) => {
+    localStorage.setItem('order', JSON.stringify(actualOrder));
   };
 
   const loadOrderFromStorage = () => {
-    setOrder(JSON.parse(localStorage.getItem('order')));
+    setCurrentOrder(JSON.parse(localStorage.getItem('order')));
   };
-  
+
   const createOrder = () => {
-    if(user === null || order !== null) return;
-    let newOrder = {
+    if (user === null || currentOrder !== null) return;
+    const newOrder = {
       products: [],
-      user: user._id,
+      user: user.id,
       amount: 0,
     };
-    setOrder(newOrder);
+    setCurrentOrder(newOrder);
     loadOrderToStorage(newOrder);
   };
-  
+
   const deleteOrder = () => {
-    const order = null;
-    setOrder(order);
+    const emptyOrder = null;
+    setCurrentOrder(emptyOrder);
     localStorage.removeItem('order');
   };
 
-  const addProduct = ({ _id, name, description, price }) => {
-    let { products, amount } = order;
-    let productToAdd = products.find(product => product._id === _id) || null;
+  const addProduct = ({
+    id, name, description, price,
+  }) => {
+    let { products: actualProducts, amount: actualAmount } = currentOrder;
+    const productToAdd = actualProducts.find(p => p.id === id) || null;
 
-    if(productToAdd === null){
+    if (productToAdd === null) {
       const newProduct = {
-        _id,
+        id,
         name,
         description,
         price,
         quantity: 1,
         totalPrice: price,
       };
-      products = [...products, newProduct];
-      amount += price;
-      setOrder({ products, amount});
-      loadOrderToStorage({ products, amount });
+      actualProducts = [...actualProducts, newProduct];
+      actualAmount += price;
+      const updatedOrder = { ...currentOrder, products: actualProducts, amount: actualAmount };
+      setCurrentOrder(updatedOrder);
+      loadOrderToStorage(updatedOrder);
       return;
     }
-    
-    let productIndex = products.indexOf(productToAdd);
-    products[productIndex].quantity += 1;
-    products[productIndex].totalPrice += price;
-    amount = calcTotal(products);
-    setOrder({ products, amount});
-    loadOrderToStorage({ products, amount });
+
+    const productIndex = actualProducts.indexOf(productToAdd);
+    actualProducts[productIndex].quantity += 1;
+    actualProducts[productIndex].totalPrice += price;
+    actualAmount = calcTotal(actualProducts);
+    const updatedOrder = { ...currentOrder, products: actualProducts, amount: actualAmount };
+    setCurrentOrder(updatedOrder);
+    loadOrderToStorage(updatedOrder);
   };
 
-  const removeProduct = ({ _id, price }) => {
-    if(order === null) return;
-    let { products, amount } = order;
+  const removeProduct = ({ id, price }) => {
+    if (currentOrder === null) return;
 
-    let productToRemove = products.find(product => product._id === _id) || null;
-    if(productToRemove === null) return;
-    let productIndex = products.indexOf(productToRemove);
+    const actualProducts = currentOrder.products;
+    const productToRemove = actualProducts.find(p => p.id === id) || null;
 
-    if(products[productIndex].quantity === 1){
-      products.splice(productIndex, 1);
-      amount = calcTotal(products);
-      setOrder({ products, amount });
-      loadOrderToStorage({ products, amount });
+    if (productToRemove === null) return;
+
+    const productIndex = actualProducts.indexOf(productToRemove);
+    let actualAmount = currentOrder.amount;
+
+    if (actualProducts[productIndex].quantity === 1) {
+      actualProducts.splice(productIndex, 1);
+      actualAmount = calcTotal(actualProducts);
+      const updatedOrder = { ...currentOrder, products: actualProducts, amount: actualAmount };
+      setCurrentOrder(updatedOrder);
+      loadOrderToStorage(updatedOrder);
       return;
     }
 
-    products[productIndex].quantity -= 1;
-    products[productIndex].totalPrice -= price;
-    amount = calcTotal(products);
-    setOrder({ products, amount });
-    loadOrderToStorage({ products, amount });
+    actualProducts[productIndex].quantity -= 1;
+    actualProducts[productIndex].totalPrice -= price;
+    actualAmount = calcTotal(actualProducts);
+    const updatedOrder = { ...currentOrder, products: actualProducts, amount: actualAmount };
+    setCurrentOrder(updatedOrder);
+    loadOrderToStorage(updatedOrder);
   };
 
   const clearOrder = () => {
-    let { products, amount } = order;
-    products.length = 0;
-    amount = 0;
-    setOrder({ products, amount });
-    loadOrderToStorage({ products, amount });
-  }
-
-  const calcTotal = products =>{
-    let total = 0;
-    products.forEach(product => total += product.totalPrice);
-    return total;
+    const actualProducts = currentOrder.products;
+    let actualAmount = currentOrder.amount;
+    actualProducts.length = 0;
+    actualAmount = 0;
+    const updatedOrder = { ...currentOrder, products: actualProducts, amount: actualAmount };
+    setCurrentOrder(updatedOrder);
+    loadOrderToStorage(updatedOrder);
   };
 
   useEffect(() => {
@@ -103,19 +114,19 @@ const CartProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    !localStorage.getItem('token') && deleteOrder();
+    if (!localStorage.getItem('token')) deleteOrder();
     loadOrderFromStorage();
   }, [location]);
 
   const values = {
-    order,
+    order: currentOrder,
     addProduct,
     removeProduct,
     clearOrder,
   };
 
   return (
-    <CartContext.Provider value = {values}>
+    <CartContext.Provider value={values}>
       {children}
     </CartContext.Provider>
   );

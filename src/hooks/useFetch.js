@@ -1,22 +1,21 @@
-import { useState, useEffect } from "react";
-import axiosConfig from "../config/axios";
+import { useState, useEffect } from 'react';
+import axiosConfig from '../config/axios';
 
-const useFetch = (URL) =>{
+const useFetch = (URL) => {
   const [dataFetch, setDataFetch] = useState({
     loading: true,
     data: null,
     error: null,
   });
 
-  const fetchData = async () =>{
+  const fetchData = async () => {
     try {
       const { data } = await axiosConfig(URL);
       setDataFetch({
         loading: false,
-        data: data,
+        data,
         error: null,
       });
-      
     } catch (error) {
       setDataFetch({
         loading: false,

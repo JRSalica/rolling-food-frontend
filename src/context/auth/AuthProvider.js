@@ -1,57 +1,60 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import jwt_decode from "jwt-decode";
+import jwtDecode from 'jwt-decode';
 import AuthContext from './AuthContext';
+import useNotification from '../../hooks/useNotification';
 import setAuthTokenAxios from '../../utils/setAuthToken';
 import axiosConfig from '../../config/axios';
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const [userToken, setUserToken] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { showSuccess, showError } = useNotification();
 
   const handleLogin = async (userData) => {
     try {
-      const { data } = await axiosConfig.post('auth/login', userData);
-      const { user, token } = data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      setToken(token);
-      setUser(user);
-      setAuthTokenAxios(token);
+      const { data: loginResponse } = await axiosConfig.post('auth/login', userData);
+      const { user: resUser, token: resToken } = loginResponse;
+      localStorage.setItem('token', resToken);
+      localStorage.setItem('user', JSON.stringify(resUser));
+      setUserToken(resToken);
+      setUser(resUser);
+      showSuccess(loginResponse.message);
       navigate('/menu');
     } catch (error) {
-      console.error(error);
+      showError(error.response.data.message);
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    setToken(null);
+    setUserToken(null);
     setUser(null);
     navigate('/');
   };
 
   const handleRegister = async (userData) => {
     try {
-      await axiosConfig.post('auth/register', userData);
+      const { data: registerResponse } = await axiosConfig.post('auth/register', userData);
+      showSuccess(registerResponse.message);
     } catch (error) {
-      console.error(error);
+      showError(error.response.data.message);
     }
   };
 
   const loadDataFromStorage = () => {
-    localStorage.getItem('token') && setToken(localStorage.getItem('token'));
-    localStorage.getItem('user') && setUser(JSON.parse(localStorage.getItem('user')));
+    if (localStorage.getItem('token')) setUserToken(localStorage.getItem('token'));
+    if (localStorage.getItem('user')) setUser(JSON.parse(localStorage.getItem('user')));
   };
-  
+
   const checkExpiredToken = () => {
-    if(token !== null){
-      let decodedToken = jwt_decode(token);
-      let currentDate = new Date();
-      ((decodedToken.exp * 1000) < currentDate.getTime()) && handleLogout();  
+    if (userToken !== null) {
+      const decodedToken = jwtDecode(userToken);
+      const currentDate = new Date();
+      if ((decodedToken.exp * 1000) < currentDate.getTime()) handleLogout();
     }
   };
 
@@ -60,23 +63,27 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    setAuthTokenAxios(userToken);
+  }, [user]);
+
+  useEffect(() => {
     checkExpiredToken();
-    setAuthTokenAxios(token);
+    // setAuthTokenAxios(userToken);
   }, [location]);
 
   const value = {
     user,
-    token,
+    token: userToken,
     onLogin: handleLogin,
     onLogout: handleLogout,
     onRegister: handleRegister,
   };
-  
+
   return (
-    <AuthContext.Provider value = {value}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
 export default AuthProvider;

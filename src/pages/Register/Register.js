@@ -1,63 +1,113 @@
-import React from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-
+import { useState } from 'react';
+import classNames from 'classnames';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { registerSchema } from '../../utils/validationSchemas/validationSchemas';
 import useAuth from '../../hooks/useAuth';
 import './index.css';
 
-
 const Register = () => {
+  const {
+    register, handleSubmit, watch, formState: { errors },
+  } = useForm({ mode: 'all', resolver: yupResolver(registerSchema) });
+  const watchForm = watch();
+
+  const [revealed, setRevealed] = useState(false);
+  const handleReveal = () => {
+    if (!revealed) setRevealed(true);
+    else setRevealed(false);
+  };
+
   const { onRegister } = useAuth();
 
-  const handleRegister = (ev) =>{
-    ev.preventDefault();
-    let dataElements = ev.target.elements;
+  const handleRegister = ({ fullName, email, password }) => {
     const userData = {
-      fullName: dataElements.fullName.value,
-      email: dataElements.email.value,
-      password: dataElements.password.value,
-    }
+      fullName,
+      email,
+      password,
+    };
     onRegister(userData);
-  }
+  };
 
   return (
-    <main className='d-flex align-items-center'>
-      <Container className='register-container'>
-          <Row className='d-flex justify-content-center'>
-            <Col xs={4} className='pb-0 py-md-4'>
-              <Form className='register-form border p-4' onSubmit={handleRegister}>
-                <Form.Group className="mb-3" controlId="full-name">
-                  <Form.Label>Nombre completo:</Form.Label>
-                  <Form.Control name='fullName' type="text" placeholder="Ingresa tu nombre completo" />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="email">
-                  <Form.Label>Email:</Form.Label>
-                  <Form.Control name='email' type="email" placeholder="Ingresa tu mail" />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="password">
-                  <Form.Label>Contraseña:</Form.Label>
-                  <Form.Control name='password' type="password" placeholder="Contraseña" />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="password-check">
-                  <Form.Label>Repeti tu contraseña:</Form.Label>
-                  <Form.Control name='password2' type="password" placeholder="Contraseña" />
-                </Form.Group>
-                
-                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                  <Form.Check type="checkbox" label="Acepto los terminos y condiciones." />
-                </Form.Group>
-                <Button variant="primary" type="submit">Registrarme</Button>
-              </Form>
-            </Col>
-          </Row>
-      </Container>
-    </main>
+    <section className='container py-4'>
+      <div className='row d-flex justify-content-center'>
+        <div className='col-12 col-md-6 col-lg-4 pb-0 py-md-4'>
+          <form className='register-form rounded-4 shadow p-4' onSubmit={handleSubmit(handleRegister)} noValidate>
+            <h2 className='fs-4 mb-4'><i className='bi bi-code pe-2' />Registrate en Rolling Food:</h2>
+            <div className='mb-3'>
+              <label className='form-label' htmlFor='register-fullname'>Nombre completo:</label>
+              <input id='register-fullname' name='fullName' type='text' placeholder='Ingresa tu nombre completo'
+                {...register('fullName')}
+                className={classNames('form-control', {
+                  'is-invalid': errors.fullName,
+                  'is-valid': (!errors.fullName && watchForm.fullName),
+                })}
+              />
+              <div className='invalid-feedback'>{errors.fullName?.message}</div>
+            </div>
+            <div className='mb-3'>
+              <label className='form-label' htmlFor='register-email'>Email:</label>
+              <input id='register-email' name='email' type='email' placeholder='Ingresa tu mail'
+                {...register('email')}
+                className={classNames('form-control', {
+                  'is-invalid': errors.email,
+                  'is-valid': (!errors.email && watchForm.email),
+                })}
+              />
+              <div className='invalid-feedback'>{errors.email?.message}</div>
+            </div>
+            <div className='mb-3'>
+              <label className='form-label' htmlFor='register-password'>Contraseña:</label>
+              <div className='input-group'>
+                <input id='register-password' name='password' type={(revealed) ? 'text' : 'password'} placeholder='Contraseña'
+                  {...register('password')}
+                  className={classNames('form-control', {
+                    'is-invalid': errors.password,
+                    'is-valid': (!errors.password && watchForm.password),
+                  })}
+                />
+                <span onClick={handleReveal} className='input-group-text'><i className={classNames('bi', {
+                  'bi-eye-fill': !revealed,
+                  'bi-eye-slash-fill': revealed,
+                })} /></span>
+              </div>
+              <div className='invalid-feedback'>{errors.password?.message}</div>
+            </div>
+            <div className='mb-3'>
+              <label className='form-label' htmlFor='register-password2'>Repeti tu contraseña:</label>
+              <div className='input-group'>
+                <input id='register-password2' name='password2' type={(revealed) ? 'text' : 'password'} placeholder='Contraseña'
+                  {...register('password2')}
+                  className={classNames('form-control', {
+                    'is-invalid': errors.password2,
+                    'is-valid': (!errors.password2 && watchForm.password2),
+                  })}
+                />
+                <span onClick={handleReveal} className='input-group-text'><i className={classNames('bi', {
+                  'bi-eye-fill': !revealed,
+                  'bi-eye-slash-fill': revealed,
+                })} /></span>
+              </div>
+              <div className='invalid-feedback'>{errors.password2?.message}</div>
+            </div>
+            <div className='mb-3'>
+              <input id='register-terms-check' type='checkbox'
+                {...register('termsCheck')}
+                className={classNames('form-control-checkbox me-2', {
+                  'is-invalid': errors.termsCheck,
+                })}
+              />
+              <label className='form-check-label' htmlFor='register-terms-check'>Acepto los terminos y condiciones</label>
+              <div className='invalid-feedback'>{errors.termsCheck?.message}</div>
+            </div>
+            <div className='d-flex justify-content-end'>
+              <button className='btn btn-primary mt-3' type='submit'>Registrarme</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
   );
 };
 

@@ -1,48 +1,76 @@
-import React from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-
+import { useState } from 'react';
+import classNames from 'classnames';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { loginSchema } from '../../utils/validationSchemas/validationSchemas';
 import useAuth from '../../hooks/useAuth';
+import './index.css';
 
 const Login = () => {
+  const {
+    register, handleSubmit, watch, formState: { errors },
+  } = useForm({ mode: 'all', resolver: yupResolver(loginSchema) });
+  const watchForm = watch();
+
+  const [revealed, setRevealed] = useState(false);
+  const handleReveal = () => {
+    if (!revealed) setRevealed(true);
+    else setRevealed(false);
+  };
+
   const { onLogin } = useAuth();
 
-  const handleLogin = (ev) =>{
-    ev.preventDefault();
-    let dataElements = ev.target.elements;
+  const handleLogin = ({ email, password }) => {
     const userData = {
-      email: dataElements.email.value,
-      password: dataElements.password.value,
-    }
+      email,
+      password,
+    };
     onLogin(userData);
-  }
+  };
 
   return (
-    <main className='d-flex align-items-center'>
-      <Container className='register-container'>
-          <Row className='d-flex justify-content-center'>
-            <Col xs={4} className='pb-0 py-md-4'>
-              <Form className='login-form border p-4' onSubmit={handleLogin}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Email:</Form.Label>
-                  <Form.Control name='email' type="email" placeholder="Ingresa tu mail" />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicPassword">
-                  <Form.Label>Contraseña:</Form.Label>
-                  <Form.Control name='password' type="password" placeholder="Contraseña" />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                  <Form.Check type="checkbox" label="Recordarme" />
-                </Form.Group>
-                <Button variant="primary" type="submit">Ingresar</Button>
-              </Form>
-            </Col>
-          </Row>
-      </Container>
-    </main>
+    <section className='container py-4'>
+      <div className='row d-flex flex-row justify-content-center'>
+        <div className='col-12 col-md-6 col-lg-4 pb-0 py-md-4'>
+          <form className='login-form rounded-4 shadow p-4' onSubmit={handleSubmit(handleLogin)} noValidate>
+            <h2 className='fs-4 mb-3'><i className='bi bi-code pe-2' />Ingresa a Rolling Food:</h2>
+            <div className='mb-3'>
+              <label className='form-label' htmlFor='login-email'>Email:</label>
+              <input id='login-email' name='email' type='email' placeholder='Ingresa tu mail'
+                {...register('email')}
+                className={classNames('form-control', {
+                  'is-invalid': errors.email,
+                  'is-valid': (!errors.email && watchForm.email),
+                })}
+              />
+            </div>
+            <div className='mb-3'>
+              <label className='form-label' htmlFor='login-password'>Contraseña:</label>
+              <div className='input-group'>
+                <input id='login-password' name='password' type={(revealed) ? 'text' : 'password'} placeholder='Contraseña'
+                  {...register('password')}
+                  className={classNames('form-control', {
+                    'is-invalid': errors.password,
+                    'is-valid': (!errors.password && watchForm.password),
+                  })}
+                />
+                <span onClick={handleReveal} className='input-group-text'><i className={classNames('bi', {
+                  'bi-eye-fill': !revealed,
+                  'bi-eye-slash-fill': revealed,
+                })} /></span>
+              </div>
+            </div>
+            <div className='mb-3'>
+              <input className='form-check-input me-2' id='login-remember-check' type='checkbox' />
+              <label className='form-check-label' htmlFor='login-remember-check'>Recordarme</label>
+            </div>
+            <div className='d-flex justify-content-end'>
+              <button className='btn btn-primary' type='submit'>Ingresar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
   );
 };
 
