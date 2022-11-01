@@ -6,7 +6,7 @@ const ProductCard = ({ product }) => {
   const { order, addProduct, removeProduct } = useCart();
 
   return (
-    <div className='col'>
+    <div className='col-6 col-md-4 col-lg-3 my-2'>
       <div className='card shadow h-100 mx-auto my-2'>
         <img src={cardImage} className='card-img-top' alt='food' />
         <div className='card-body'>

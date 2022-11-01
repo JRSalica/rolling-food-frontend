@@ -31,10 +31,10 @@ const Header = () => {
               {user?.role === 'ADMIN_ROLE' && <li><NavLink className='nav-link' to='/admin'>Admin</NavLink></li>}
             </ul>
             <ul className='navbar-nav'>
-              {token && <li><Tippy content={`${order?.products?.length} productos.`}><button className='btn btn-dark border-light rounded-0 mx-2' type='button' onClick={goToCart}><i className='bi bi-cart'/><span className='badge badge-dark text-bg-dark pe-0'>{order?.products?.length}</span></button></Tippy></li>}
+              {token && <li><Tippy content={`${order?.products?.length} productos.`}><button className='btn btn-dark border-light rounded-0 mx-0 mx-md-2 my-2 my-md-0' type='button' onClick={goToCart}><i className='bi bi-cart'/><span className='badge badge-dark text-bg-dark pe-0'>{order?.products?.length}</span></button></Tippy></li>}
               {!token && <li><NavLink className='nav-link' to='/login'>Ingresar</NavLink></li>}
               {!token && <li><NavLink className='nav-link' to='/register'>Registrarme</NavLink></li>}
-              {token && <li><button className='btn btn-danger rounded-0' type='button' onClick={onLogout}>Logout</button></li>}
+              {token && <li><Tippy content='Cerrar sesion'><button className='btn btn-danger rounded-0' type='button' onClick={onLogout}>Salir</button></Tippy></li>}
             </ul>
           </div>
         </div>

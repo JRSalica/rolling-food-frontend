@@ -9,7 +9,7 @@ const CategoryGroup = ({ category, products }) => {
       <div className='row row-cols-4 pb-md-4'>
         {products?.length > 0
           ? (products.map(product => <ProductCard key={product.id} product={product} />))
-          : (<p className='ms-2 mt-2'>No hay productos para esta categoria.</p>)}
+          : (<p className='col-8 ms-2 mt-2'>No hay productos para esta categoria.</p>)}
       </div>
     </section>
   );
