@@ -20,6 +20,7 @@
     "react-hook-form": "^7.37.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "react-search-autocomplete": "^8.0.0",
     "react-spinners": "^0.13.6",
     "react-toastify": "^9.0.8",
     "sweetalert2": "^11.6.0",

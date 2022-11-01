@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { showSuccess, showError } = useNotification();
+  const { showInfo, showSuccess, showError } = useNotification();
 
   const handleLogin = async (userData) => {
     try {
@@ -34,12 +34,14 @@ const AuthProvider = ({ children }) => {
     setUserToken(null);
     setUser(null);
     navigate('/');
+    showInfo('Sesion finalizada.');
   };
 
   const handleRegister = async (userData) => {
     try {
       const { data: registerResponse } = await axiosConfig.post('auth/register', userData);
       showSuccess(registerResponse.message);
+      navigate('/login');
     } catch (error) {
       showError(error.response.data.message);
     }
